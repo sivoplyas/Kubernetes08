@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-z1
+  namespace: learn08
+  labels:
+    app: nginx-multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-multitool
+  template:
+    metadata:
+      labels:
+        app: nginx-multitool
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: configmap-nginx
+            mountPath: /usr/share/nginx/html/index.html
+            readOnly: true
+            subPath: html
+      - name: multitool
+        image: wbitt/network-multitool
+        ports:
+        - containerPort: 81
+        volumeMounts:
+          - name: configmap-multitool
+            mountPath: /etc/nginx/nginx.conf
+            readOnly: true
+            subPath: config
+      volumes:
+        - name: configmap-nginx
+          configMap:
+            name: configmap
+            items:
+              - key: html
+                path: html
+                mode: 0444
+        - name: configmap-multitool
+          configMap:
+            name: configmap
+            items:
+              - key: config
+                path: config
+                mode: 0444

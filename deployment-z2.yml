@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-z1
+  namespace: learn08
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: configmap-nginx
+            mountPath: /usr/share/nginx/html/index.html
+            readOnly: true
+            subPath: html
+      volumes:
+        - name: configmap-nginx
+          configMap:
+            name: configmap
+            items:
+              - key: html
+                path: html
+                mode: 0444

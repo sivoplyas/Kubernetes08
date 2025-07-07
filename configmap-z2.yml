@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+  namespace: learn08
+data:
+  html: |
+    <html>
+    <body>
+        <h1>api</h1>
+    </body>
+    </html>
